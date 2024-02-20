@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Resizable Sidebar
 // @description  Enables the sidebar to be resized
-// @version      0.3
+// @version      0.2
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -14,7 +14,7 @@
 
 (function() {
 
-    const sidebarThreshold = 16;
+    const sidebarThreshold = 10;
 
     let sidebar;
     let itemsContainer;
@@ -34,9 +34,7 @@
         sidebar.addEventListener('mousedown', (ev) => {
 
             const move = ev.clientX;
-            const diff = Math.abs(sidebar.getBoundingClientRect().x - move);
-
-            if (diff > sidebarThreshold) {
+            if (!isMouseOnSidebarEdge(move)) {
                 return;
             }
 
@@ -50,12 +48,15 @@
 
         document.addEventListener('mousemove', (ev) => {
 
+            const move = ev.clientX;
             if (moving === false)
             {
+                document.body.style.cursor = isMouseOnSidebarEdge(move)
+                    ? "ew-resize"
+                    : "default";
+
                 return;
             }
-
-            const move = ev.clientX;
 
             if (lastPos === undefined) {
                 lastPos = ev.clientX;
@@ -66,6 +67,19 @@
 
             sidebar.style.width = `${w}px`;
         });
+
+        document.addEventListener('mouseup', () => {
+           if (!moving) {
+               document.body.style.cursor = "default";
+           }
+        });
+    }
+
+    function isMouseOnSidebarEdge(mouseX) {
+
+        const diff = mouseX - sidebar.getBoundingClientRect().x;
+
+        return diff >= 0 && diff <= sidebarThreshold;
     }
 
     function getSidebar() {

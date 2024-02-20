@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Resizable Sidebar
 // @description  Enables the sidebar to be resized
-// @version      0.2
+// @version      0.3
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -41,6 +41,7 @@
             }
 
             moving = true;
+            lastPos = move;
         });
 
         document.addEventListener('mouseup', (ev) => {

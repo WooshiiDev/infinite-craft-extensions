@@ -91,8 +91,6 @@
         saveLocalStorage('id', getCraftId());
 
         console.log(`Saving ${len - 1} elements.`);
-        console.log(`Saving elementId ${getCraftId()}.`);
-        console.log(`Saving elements ${JSON.stringify(getCraftElements())}.`);
     }
 
     const loadElements = () => {
@@ -102,22 +100,31 @@
         setCraftElements(elementsArray);
         setCraftId(elementsId);
 
+        // Clamp to area
+
+        const parent = document.getElementsByClassName("instances")[0];
+        const container = parent.children[0];
+        const sidebar = document.getElementsByClassName("sidebar")[0];
+
+        const w = container.offsetWidth - sidebar.offsetWidth;
+        const h = document.getElementsByClassName("container")[0].offsetHeight;
+
         setTimeout(() => {
-
-            const storedElements = loadLocalStorage('html');
-            const parent = Array.from(document.getElementsByClassName("instances"))[0];
-            const container = parent.children[0];
-
             for (let i = 0; i < elementsArray.length; i++) {
-            const x = elementsArray[i].left;
-            const y = elementsArray[i].top;
-            const z = elementsArray[i].zIndex;
+                const element = elementsArray[i];
+                const child = container.children[i];
 
-            container.children[i].style = `translate: ${x}px ${y}px; z-index: ${z};`;
-            elementsArray[i].elem = container.children[i];
-            }
+                element.elem = child;
+                element.left = clamp(element.left, 0, w - element.width);
+                element.top = clamp(element.top, 0, h - element.height);
 
-        }, 0);
+                const x = element.left;
+                const y = element.top;
+                const z = element.zIndex;
+
+                child.style = `translate: ${x}px ${y}px; z-index: ${z};`;
+             }
+        });
     }
 
     // Save/Load
@@ -182,3 +189,8 @@
     }, false);
 })();
 
+// TODO: Move to require class
+
+const clamp = function(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+};

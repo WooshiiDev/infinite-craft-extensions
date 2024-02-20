@@ -7,8 +7,8 @@
 // @namespace    http://wooshii.dev/
 // @match        https://neal.fun/infinite-craft/
 // @icon         https://github.githubassets.com/pinned-octocat.svg
-// @downloadURL  https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/github-code-colors.user.js
-// @updateURL    https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/github-code-colors.user.js
+// @downloadURL  https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/load-layout.user.js
+// @updateURL    https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/load-layout.user.js
 // @grant        none
 // ==/UserScript==
 

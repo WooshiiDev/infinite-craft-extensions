@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Load Layout
 // @description  Saves layouts for elements
-// @version      0.3
+// @version      0.4
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -14,56 +14,22 @@
 
 (function() {
 
-    const buttonStyle = {
-        position: 'absolute',
-        width: '80px',
-        height: '35px',
-
-        backgroundColor: '#1A1B31',
-        color: 'white',
-
-        fontWeight: 'bold',
-        fontFamily: 'Roboto,sans-serif',
-
-        borderRadius: '5px',
-        cursor: 'pointer',
-        padding: 4
-    }
-
     const init = () => {
         const container = document.querySelector('.container');
 
-        const saveButton = createElement('wooshii-btn-save', 'button');
-        const loadButton = createElement('wooshii-btn-load', 'button');
-
-        const buttonStyle = {
-            appearance: 'none',
-            position: 'absolute',
-            width: '80px',
-            height: '35px',
-            backgroundColor: '#1A1B31',
-            color: 'white',
-            fontWeight: 'bold',
-            fontFamily: 'Roboto,sans-serif',
-            border: '0',
-            outline: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            padding: 4,
-        }
-
-        Object.keys(buttonStyle).forEach((attr) => {
-            saveButton.style[attr] = buttonStyle[attr];
-            loadButton.style[attr] = buttonStyle[attr];
-        });
+        const saveButton = createElement('wooshii-btn-save', 'div', {class: "item", attribute: "data-v-8889ef30"});
+        const loadButton = createElement('wooshii-btn-load', 'div', {class: "item", attribute: "data-v-8889ef30"});
 
         saveButton.style.bottom = '24px';
         saveButton.style.left = '24px';
-        loadButton.style.bottom = '24px';
-        loadButton.style.left = '120px';
+        saveButton.style.position = 'absolute';
 
-        saveButton.innerText = 'Save';
-        loadButton.innerText = 'Restore';
+        loadButton.style.bottom = '24px';
+        loadButton.style.left = '144px';
+        loadButton.style.position = 'absolute';
+
+        saveButton.innerText = 'Save Layout';
+        loadButton.innerText = 'Load Layout';
 
         container.appendChild(saveButton);
         container.appendChild(loadButton);
@@ -95,6 +61,11 @@
 
     const loadElements = () => {
         const elementsArray = loadLocalStorage('elements');
+
+        if (elementsArray === null) {
+            return;
+        }
+
         const elementsId = loadLocalStorage('id');
 
         setCraftElements(elementsArray);
@@ -155,7 +126,8 @@
     function createElement(name, type, data = {}) {
         const element = document.createElement(type);
         element.id = name;
-        element.class = data.class;
+        element.classList.add(data.class);
+        element.setAttribute(data.attribute, "");
 
         return element;
     }

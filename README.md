@@ -10,6 +10,7 @@ A lot of them are just personal wants, or things friends have requesteed.
 | Name                     |  Download Link |
 |--------------------------|:-------------:|
 | Save element layout      |  [Download](https://github.com/WooshiiDev/infinite-craft-extensions/raw/main/load-layout.user.js)   |
+| Dark Mode Toggle         |  [Download](https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/dark-mode.user.js)   |
 
 ### Issues/Bugs
 

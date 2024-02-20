@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Load Layout
 // @description  Saves layouts for elements
-// @version      0.4
+// @version      0.5
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -23,10 +23,12 @@
         saveButton.style.bottom = '24px';
         saveButton.style.left = '24px';
         saveButton.style.position = 'absolute';
+        saveButton.style.zIndex = '100';
 
         loadButton.style.bottom = '24px';
         loadButton.style.left = '144px';
         loadButton.style.position = 'absolute';
+        loadButton.style.zIndex = '100';
 
         saveButton.innerText = 'Save Layout';
         loadButton.innerText = 'Load Layout';
@@ -95,7 +97,7 @@
 
                 child.style = `translate: ${x}px ${y}px; z-index: ${z};`;
              }
-        }, 1);
+        }, 10);
     }
 
     // Save/Load

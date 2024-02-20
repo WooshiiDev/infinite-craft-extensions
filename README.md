@@ -5,6 +5,11 @@ A repo to store some extensions I've made to help with some small things while p
 
 A lot of them are just personal wants, or things friends have requesteed.
 
+### Requirements
+
+You will need a script browser extension like [TamperMonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) to use these.
+After you have one of the extensions, click download and it should auto redirect to install.
+
 ### List of Extensions
 
 | Name                     |  Download Link |

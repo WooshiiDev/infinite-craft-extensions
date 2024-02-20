@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Resizable Sidebar
 // @description  Enables the sidebar to be resized
-// @version      0.1
+// @version      0.2
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/

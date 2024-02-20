@@ -14,6 +14,8 @@
 
 (function() {
 
+    const sidebarThreshold = 16;
+
     let sidebar;
     let itemsContainer;
     let gameContainer;
@@ -29,11 +31,19 @@
         itemsContainer = getItemsContainer();
         gameContainer = getGamesContainer();
 
-        sidebar.addEventListener('mousedown', () => {
+        sidebar.addEventListener('mousedown', (ev) => {
+
+            const move = ev.clientX;
+            const diff = Math.abs(sidebar.getBoundingClientRect().x - move);
+
+            if (diff > sidebarThreshold) {
+                return;
+            }
+
             moving = true;
         });
 
-        document.addEventListener('mouseup', () => {
+        document.addEventListener('mouseup', (ev) => {
             moving = false;
         });
 

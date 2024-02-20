@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Dark Mode Toggle
 // @description  Adds a toggleable dark mode
-// @version      0.1
+// @version      0.2
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -80,7 +80,13 @@
             canvas.style.backgroundColor = "";
             canvas.style.webkitFilter = "";
             controls.style.webkitFilter = "";
-            sidebar.style.background = "";
+
+            sidebar.style.backgroundColor = "";
+            sidebar.style.webkitFilter = "";
+
+            sidebar.children[0].style.webkitFilter = "";
+            sidebar.children[0].style.backgroundColor = "";
+            sidebar.children[1].style.backgroundColor = "";
         }
     }
 

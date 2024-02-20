@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Load Layout
 // @description  Saves layouts for elements
-// @version      0.2
+// @version      0.3
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -124,7 +124,7 @@
 
                 child.style = `translate: ${x}px ${y}px; z-index: ${z};`;
              }
-        });
+        }, 1);
     }
 
     // Save/Load

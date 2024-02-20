@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Load Layout
 // @description  Saves layouts for elements
-// @version      0.1
+// @version      0.2
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/

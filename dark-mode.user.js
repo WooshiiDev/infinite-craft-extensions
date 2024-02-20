@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Dark Mode Toggle
 // @description  Adds a toggleable dark mode
-// @version      0.2
+// @version      0.3
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -10,6 +10,7 @@
 // @downloadURL  https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/dark-mode.user.js
 // @updateURL    https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/dark-mode.user.js
 // @grant        none
+// @run-at       document-start
 // ==/UserScript==
 
 (function() {
@@ -21,6 +22,7 @@
     const init = () => {
 
         canvas = document.getElementsByClassName("particles")[0];
+
         controls = document.getElementsByClassName("side-controls")[0];
         sidebar = document.getElementsByClassName("sidebar")[0];
 
@@ -33,8 +35,7 @@
             assignDarkMode(toggle);
             setDarkMode(toggle);
         });
-
- }
+    }
 
     // Helpers
 
@@ -57,6 +58,12 @@
         return button;
     }
 
+    function darkModeInit() {
+        if (hasDarkMode()) {
+            document.documentElement.style.backgroundColor = "black";
+        }
+    }
+
     function assignDarkMode(isOn) {
 
         if (isOn === "true" || isOn === true)
@@ -66,6 +73,7 @@
 
             canvas.style.backgroundColor = c;
             canvas.style.webkitFilter = "invert(1)";
+
             controls.style.webkitFilter = "invert(1)";
 
             sidebar.style.backgroundColor = c;
@@ -74,6 +82,7 @@
             sidebar.children[0].style.webkitFilter = "invert(1)";
             sidebar.children[0].style.backgroundColor = cc;
             sidebar.children[1].style.backgroundColor = c;
+            document.documentElement.style.backgroundColor = "black";
         }
         else
         {
@@ -87,6 +96,7 @@
             sidebar.children[0].style.webkitFilter = "";
             sidebar.children[0].style.backgroundColor = "";
             sidebar.children[1].style.backgroundColor = "";
+            document.documentElement.style.backgroundColor = "white";
         }
     }
 
@@ -98,11 +108,21 @@
         return localStorage.getItem(`infinite-craft-dark-mode`);
     }
 
+    function hasDarkMode() {
+        return getDarkMode() === true || getDarkMode() === "true";
+    }
+
     // Init
+
+    window.addEventListener('DOMContentLoaded', () => {
+        darkModeInit();
+    }, false);
 
     window.addEventListener('load', () => {
         init();
+
     }, false);
+
 })();
 
 function createButton(name, data = {}) {

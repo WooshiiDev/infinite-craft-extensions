@@ -157,11 +157,7 @@
     }
 
     function getGameID() {
-
-        const attr = Object.keys(getContainer().dataset)[0];
-        const key = attr.slice(1, attr.length);
-
-        return 'data-v-'+key;
+        return 'data-' + Object.keys(getContainer().dataset)[0];
     }
 
     function getContainer() {

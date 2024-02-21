@@ -17,6 +17,7 @@ After you have one of the extensions, click download and it should auto redirect
 | Save/Load your element layout     |  [Download](https://github.com/WooshiiDev/infinite-craft-extensions/raw/main/load-layout.user.js)   |
 | Dark Mode Toggle         |  [Download](https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/dark-mode.user.js)   |
 | Resizable Sidebar        |  [Download](https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/resizable-sidebar.user.js)   |
+| Remove right click menu  |  [Download](https://raw.githubusercontent.com/WooshiiDev/infinite-craft-extensions/main/remove-context.user.js)   |
 
 ### Issues/Bugs
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Load Layout
 // @description  Saves layouts for elements
-// @version      0.6
+// @version      0.7
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -22,16 +22,18 @@
         id = getGameID();
 
         const saveButton = createElement('wooshii-btn-save', 'div', {class: "item", attribute: id});
-        const loadButton = createElement('wooshii-btn-load', 'div', {class: "item", attribute: id});
+        // const loadButton = createElement('wooshii-btn-load', 'div', {class: "item", attribute: id});
 
         saveButton.innerText = 'Save Layout';
-        loadButton.innerText = 'Load Layout';
+        // loadButton.innerText = 'Load Layout';
 
         controls.insertBefore(saveButton, controls.children[0]);
-        controls.insertBefore(loadButton, controls.children[0]);
+        // controls.insertBefore(loadButton, controls.children[0]);
 
         saveButton.addEventListener('click', saveElements);
-        loadButton.addEventListener('click', loadElements);
+        // loadButton.addEventListener('click', loadElements);
+
+        loadElements();
     }
 
     const saveElements = () => {

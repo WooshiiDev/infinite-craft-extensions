@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Dark Mode Toggle
 // @description  Adds a toggleable dark mode
-// @version      0.4
+// @version      0.5
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -19,6 +19,8 @@
     let controls;
     let sidebar;
 
+    let mode;
+
     const init = () => {
 
         canvas = document.getElementsByClassName("particles")[0];
@@ -26,14 +28,18 @@
         controls = document.getElementsByClassName("side-controls")[0];
         sidebar = document.getElementsByClassName("sidebar")[0];
 
-        assignDarkMode(getDarkMode());
+        assignDarkMode(mode);
         applyControlStyle();
 
         const toggleButton = createToggleButton();
         toggleButton.addEventListener('click', () => {
-            const toggle = canvas.style.backgroundColor.length === 0;
-            assignDarkMode(toggle);
-            setDarkMode(toggle);
+
+            mode = !mode;
+
+            console.log(mode);
+
+            assignDarkMode(mode);
+            setDarkMode(mode);
         });
     }
 
@@ -51,7 +57,7 @@
 
         const button = createElement("wooshii-dark-toggle", "div", {class: "item"});
         button.innerText = 'Toggle Dark Mode';
-        button.setAttribute("data-v-8889ef30", "");
+        button.setAttribute(getGameID(), "");
 
         controls.insertBefore(button, controls.children[0]);
 
@@ -59,7 +65,9 @@
     }
 
     function darkModeInit() {
-        if (hasDarkMode()) {
+        mode = hasDarkMode();
+
+        if (mode) {
             document.documentElement.style.backgroundColor = "black";
         }
     }
@@ -68,35 +76,21 @@
 
         if (isOn === "true" || isOn === true)
         {
-            const c = "#ffffff";
-            const cc = "121212";
-
-            canvas.style.backgroundColor = c;
+            canvas.style.backgroundColor = "white";
             canvas.style.webkitFilter = "invert(1)";
 
             controls.style.webkitFilter = "invert(1)";
 
-            sidebar.style.backgroundColor = c;
             sidebar.style.webkitFilter = "invert(1)";
-
             sidebar.children[0].style.webkitFilter = "invert(1)";
-            sidebar.children[0].style.backgroundColor = cc;
-            sidebar.children[1].style.backgroundColor = c;
-            document.documentElement.style.backgroundColor = "black";
         }
         else
         {
-            canvas.style.backgroundColor = "";
             canvas.style.webkitFilter = "";
             controls.style.webkitFilter = "";
-
-            sidebar.style.backgroundColor = "";
             sidebar.style.webkitFilter = "";
-
+            sidebar.style.webkitFilter = "";
             sidebar.children[0].style.webkitFilter = "";
-            sidebar.children[0].style.backgroundColor = "";
-            sidebar.children[1].style.backgroundColor = "";
-            document.documentElement.style.backgroundColor = "white";
         }
     }
 
@@ -112,7 +106,20 @@
         return getDarkMode() === true || getDarkMode() === "true";
     }
 
+    function getGameID() {
+
+        const attr = Object.keys(getContainer().dataset)[0];
+        const key = attr.slice(1, attr.length);
+
+        return 'data-v-'+key;
+    }
+
+    function getContainer() {
+        return document.querySelector('.container');
+    }
+
     // Init
+
 
     window.addEventListener('load', () => {
         init();
@@ -120,7 +127,6 @@
     }, false);
 
     darkModeInit();
-    
 })();
 
 function createButton(name, data = {}) {

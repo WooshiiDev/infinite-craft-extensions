@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Multi-select
 // @description  Select and drag multiple elements
-// @version      1.0
+// @version      1.1
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -217,7 +217,17 @@
             moving = true;
         });
 
-        element.addEventListener('mouseup', () => {moving = false; onElement = false; craft.clearSelectedElement(); });
+        element.addEventListener('mouseup', () => {
+
+            onElement = false;
+
+            if (!moving) {
+                return;
+            }
+
+            moving = false;
+            craft.clearSelectedElement();
+        });
     }
 
     // --- Drag Logic
@@ -291,8 +301,6 @@
         element.id = name;
         element.classList.add(data.class);
         element.setAttribute(data.attribute, "");
-
-
         return element;
     }
 

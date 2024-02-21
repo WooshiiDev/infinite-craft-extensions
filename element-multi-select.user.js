@@ -179,7 +179,8 @@
                 return;
             }
 
-            if (event.key === 'Delete') {
+            const key = event.key;
+            if (key === 'Delete' || key === 'Backspace') {
                  selected.forEach(e => {
                      craft.deleteElement(e);
                  });

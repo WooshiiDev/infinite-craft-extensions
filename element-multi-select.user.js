@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Multi-select
 // @description  Select and drag multiple elements
-// @version      1.1
+// @version      1.2
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -38,6 +38,17 @@
 
             clearSelectedElement: function() {
                 getCraft().selectedInstance = this.getCraftElements()[0];
+            },
+
+            deleteElement: function(element) {
+                const index = this.getCraftElements().indexOf(element);
+
+                if (index === -1) {
+                    return;
+                }
+
+                this.getCraftElements().splice(index, 1);
+                this.clearSelectedElement();
             },
 
             duplicateElement: function(element) {
@@ -162,6 +173,19 @@
                 });
             }
         });
+
+        document.addEventListener("keydown", (event) => {
+            if (selection.length == 0) {
+                return;
+            }
+
+            if (event.key === 'Delete') {
+                 selected.forEach(e => {
+                     craft.deleteElement(e);
+                 });
+            }
+        });
+
 
         container.addEventListener('mousedown', (ev) => { if (!onSidebar && !onElement) beginSelection(ev); });
         container.addEventListener('mouseup', (ev) => { if (began) endSelection(); });

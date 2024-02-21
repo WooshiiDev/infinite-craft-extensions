@@ -5,7 +5,7 @@ A repo to store some extensions I've made to help with some small things while p
 
 A lot of them are just personal wants, or things friends have requesteed.
 
-**Note: ** I will not be adding or accepting requests to add hacks, cheats or any form of solver.
+**Note:** I will not be adding or accepting requests to add hacks, cheats or any form of solver.
 
 ### Requirements
 

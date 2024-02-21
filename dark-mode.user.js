@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Dark Mode Toggle
 // @description  Adds a toggleable dark mode
-// @version      0.3
+// @version      0.4
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -114,15 +114,13 @@
 
     // Init
 
-    window.addEventListener('DOMContentLoaded', () => {
-        darkModeInit();
-    }, false);
-
     window.addEventListener('load', () => {
         init();
 
     }, false);
 
+    darkModeInit();
+    
 })();
 
 function createButton(name, data = {}) {

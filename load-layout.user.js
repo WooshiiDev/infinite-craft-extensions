@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Load Layout
 // @description  Saves layouts for elements
-// @version      0.5
+// @version      0.6
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -14,27 +14,21 @@
 
 (function() {
 
+    let id;
+
     const init = () => {
-        const container = document.querySelector('.container');
+        const container = getContainer();
+        const controls = getControls();
+        id = getGameID();
 
-        const saveButton = createElement('wooshii-btn-save', 'div', {class: "item", attribute: "data-v-8889ef30"});
-        const loadButton = createElement('wooshii-btn-load', 'div', {class: "item", attribute: "data-v-8889ef30"});
-
-        saveButton.style.bottom = '24px';
-        saveButton.style.left = '24px';
-        saveButton.style.position = 'absolute';
-        saveButton.style.zIndex = '100';
-
-        loadButton.style.bottom = '24px';
-        loadButton.style.left = '144px';
-        loadButton.style.position = 'absolute';
-        loadButton.style.zIndex = '100';
+        const saveButton = createElement('wooshii-btn-save', 'div', {class: "item", attribute: id});
+        const loadButton = createElement('wooshii-btn-load', 'div', {class: "item", attribute: id});
 
         saveButton.innerText = 'Save Layout';
         loadButton.innerText = 'Load Layout';
 
-        container.appendChild(saveButton);
-        container.appendChild(loadButton);
+        controls.insertBefore(saveButton, controls.children[0]);
+        controls.insertBefore(loadButton, controls.children[0]);
 
         saveButton.addEventListener('click', saveElements);
         loadButton.addEventListener('click', loadElements);
@@ -70,37 +64,41 @@
 
         const elementsId = loadLocalStorage('id');
 
-        setCraftElements(elementsArray);
-        setCraftId(elementsId);
-
-        // Clamp to area
-
         const parent = document.getElementsByClassName("instances")[0];
         const container = parent.children[0];
-        const sidebar = document.getElementsByClassName("sidebar")[0];
 
+        setCraftElements([]);
+        elementsArray.forEach((element, index) => {
+            getCraft().instances.push(element);
+        });
+
+        const sidebar = document.getElementsByClassName("sidebar")[0];
         const w = container.offsetWidth - sidebar.offsetWidth;
         const h = document.getElementsByClassName("container")[0].offsetHeight;
 
         setTimeout(() => {
-            for (let i = 0; i < elementsArray.length; i++) {
-                const element = elementsArray[i];
-                const child = container.children[i];
-
-                element.elem = child;
-                element.left = clamp(element.left, 0, w - element.width);
-                element.top = clamp(element.top, 0, h - element.height);
-
-                const x = element.left;
-                const y = element.top;
-                const z = element.zIndex;
-
-                child.style = `translate: ${x}px ${y}px; z-index: ${z};`;
-             }
-        }, 10);
+            elementsArray.forEach((element, index) => processElement(element, container.children[index], w, h));
+            setCraftId(elementsId);
+        }, 0);
     }
 
     // Save/Load
+
+    function processElement(element, child, w, h) {
+
+        if (element.elem === undefined) {
+            return;
+        }
+
+        element.left = clamp(element.left, 0, w - element.width);
+        element.top = clamp(element.top, 0, h - element.height);
+
+        const x = element.left;
+        const y = element.top;
+        const z = element.zIndex;
+        child.style = `translate: ${x}px ${y}px; z-index: ${z};`;
+        element.elem = child;
+    }
 
     function saveLocalStorage(name, value) {
         localStorage.setItem(`infinite-craft-${name}`, JSON.stringify(value));
@@ -154,6 +152,22 @@
 
     function setCraftId(id) {
         getCraft().instanceId = id;
+    }
+
+    function getGameID() {
+
+        const attr = Object.keys(getContainer().dataset)[0];
+        const key = attr.slice(1, attr.length);
+
+        return 'data-v-'+key;
+    }
+
+    function getContainer() {
+        return document.querySelector('.container');
+    }
+
+    function getControls() {
+        return document.querySelector('.side-controls');
     }
 
     // Init

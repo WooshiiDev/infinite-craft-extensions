@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Dark Mode Toggle
 // @description  Adds a toggleable dark mode
-// @version      0.5
+// @version      0.6
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -107,11 +107,7 @@
     }
 
     function getGameID() {
-
-        const attr = Object.keys(getContainer().dataset)[0];
-        const key = attr.slice(1, attr.length);
-
-        return 'data-v-'+key;
+        return 'data-' + Object.keys(getContainer().dataset)[0];
     }
 
     function getContainer() {

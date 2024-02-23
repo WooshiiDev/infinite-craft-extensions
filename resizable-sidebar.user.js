@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Resizable Sidebar
 // @description  Enables the sidebar to be resized
-// @version      0.4
+// @version      1.0
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -14,91 +14,158 @@
 
 (function() {
 
-    const sidebarThreshold = 10;
+   const feature_sidebar = function(){
 
-    let sidebar;
-    let itemsContainer;
-    let gameContainer;
+        const minSize = 200;
+        const maxPadding = 32;
 
-    let hover;
-    let moving = false;
+        const sidebarThreshold = 10;
+        let sidebar;
 
-    let lastPos = undefined;
+        let prevX;
+        let moving = false;
 
-    const init = () => {
-        sidebar = getSidebar();
+        function setupEvents() {
 
-        itemsContainer = getItemsContainer();
-        gameContainer = getGamesContainer();
+            sidebar = getSidebar();
+            sidebar.addEventListener('mousedown', (ev) => beginDrag(ev));
 
-        sidebar.addEventListener('mousedown', (ev) => {
+            prevX = sidebar.style.left;
 
-            const move = ev.clientX;
-            if (!isMouseOnSidebarEdge(move)) {
+            document.addEventListener('mouseup', (ev) => endDrag(ev));
+            document.addEventListener('mousemove', (ev) => updateDrag(ev));
+
+            addEventListener("resize", (ev) => {
+                setSidebarSize(0);
+                handleInvalidElements();
+            });
+        }
+
+        function beginDrag(ev) {
+
+            const clientX = ev.clientX;
+
+            if (!isMouseOnSidebarEdge(clientX)) {
                 return;
             }
 
+            prevX = clientX;
             moving = true;
-            lastPos = move;
-        });
+        }
 
-        document.addEventListener('mouseup', (ev) => {
+        function endDrag(ev) {
+
+            if (moving === false) {
+                return;
+            }
+
             moving = false;
-        });
+            handleInvalidElements();
+        }
 
-        document.addEventListener('mousemove', (ev) => {
+        function updateDrag(ev) {
 
-            const move = ev.clientX;
+            const clientX = ev.clientX;
             if (moving === false)
             {
-                document.body.style.cursor = isMouseOnSidebarEdge(move)
+                document.body.style.cursor = isMouseOnSidebarEdge(clientX)
                     ? "ew-resize"
                     : "default";
-
                 return;
             }
 
-            if (lastPos === undefined) {
-                lastPos = ev.clientX;
+            if (prevX === undefined) {
+                prevX = clientX;
             }
 
-            const w = clamp(sidebar.offsetWidth + (lastPos - move), 200, gameContainer.offsetWidth - 32);
-            lastPos = move;
+            setSidebarSize(prevX - clientX);
+            prevX = clientX;
 
+        }
+
+        function setSidebarSize(deltaX) {
+
+            const w = clamp(sidebar.offsetWidth + deltaX, minSize, getContainer().offsetWidth - maxPadding);
             sidebar.style.width = `${w}px`;
-        });
+        }
 
-        document.addEventListener('mouseup', () => {
-           if (!moving) {
-               document.body.style.cursor = "default";
-           }
-        });
-    }
+        function isMouseOnSidebarEdge(mouseX) {
+            const diff = mouseX - sidebar.getBoundingClientRect().x;
+            return diff >= 0 && diff <= sidebarThreshold;
+        }
 
-    function isMouseOnSidebarEdge(mouseX) {
+        function handleInvalidElements() {
 
-        const diff = mouseX - sidebar.getBoundingClientRect().x;
+            const elements = getCraftElements();
+            for (let i = elements.length - 1; i >= 0; i--) {
+                const element = elements[i];
+                if (checkElementIntersection(element)) {
+                    deleteElementByIndex(i);
+                }
+            }
+        }
 
-        return diff >= 0 && diff <= sidebarThreshold;
-    }
+        function checkElementIntersection(element) {
+            if (element.id === 0) {
+                return false;
+            }
+
+            return(element.left + element.width) > getSidebarEdge();
+        }
+
+        function getSidebarEdge() {
+            return sidebar.getBoundingClientRect().x;
+        }
+
+        setupEvents();
+    };
+
+    // HTML Elements
 
     function getSidebar() {
         return document.getElementsByClassName("sidebar")[0];
     }
 
-    function getItemsContainer() {
-        return document.getElementsByClassName("items")[0];
-    }
-
-    function getGamesContainer() {
+    function getContainer() {
         return document.getElementsByClassName("container")[0];
     }
 
+    // --- Infinite Craft
+
+    function getCraft() {
+        return window.$nuxt.$children[2].$children[0].$children[0];;
+    }
+
+    function getCraftElements() {
+        return getCraft().instances;
+    }
+
+    function clearSelectedElement() {
+        getCraft().selectedInstance = getCraftElements()[0];
+    }
+
+    function deleteElement(element) {
+        deleteElementByIndex(getCraftElements().indexOf(element));
+    }
+
+    function deleteElementByIndex(index) {
+        if (index === -1) {
+            return;
+        }
+
+        getCraftElements().splice(index, 1);
+        clearSelectedElement();
+    }
+
+    // --- Utils
+
+     function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+    };
+
+    // --- Init
+
     window.addEventListener('load', () => {
-        init();
+        feature_sidebar();
     }, false);
 })();
-
-const clamp = function(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-};

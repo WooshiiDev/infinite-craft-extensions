@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Resizable Sidebar
 // @description  Enables the sidebar to be resized
-// @version      1.0
+// @version      1.1
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -29,6 +29,7 @@
 
             sidebar = getSidebar();
             sidebar.addEventListener('mousedown', (ev) => beginDrag(ev));
+            getSidebarHolder().style.maxWidth = "100%";
 
             prevX = sidebar.style.left;
 
@@ -124,6 +125,10 @@
 
     function getSidebar() {
         return document.getElementsByClassName("sidebar")[0];
+    }
+
+    function getSidebarHolder() {
+        return document.querySelector(".items");
     }
 
     function getContainer() {

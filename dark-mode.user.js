@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Infinite Craft] Dark Mode Toggle
 // @description  Adds a toggleable dark mode
-// @version      0.6
+// @version      1.0
 // @author       Wooshii
 // @license      MIT
 // @namespace    http://wooshii.dev/
@@ -15,131 +15,130 @@
 
 (function() {
 
-    let canvas;
-    let controls;
-    let sidebar;
+    const SAVE_KEY = "dark-mode";
+    const feature_darkmode = function () {
 
-    let mode;
+        // - Components
 
-    const init = () => {
+        const getCanvas = () => document.querySelector(".particles");
+        const getControls = () => document.querySelector(".side-controls");
 
-        canvas = document.getElementsByClassName("particles")[0];
+        const getSidebar = () => document.querySelector(".sidebar");
+        const getSidebarItems = () => getSidebar().children[0];
 
-        controls = document.getElementsByClassName("side-controls")[0];
-        sidebar = document.getElementsByClassName("sidebar")[0];
+        const getTitle = () => document.querySelector(".site-title");
+        const getLogo = () => document.querySelector(".logo");
 
-        assignDarkMode(mode);
-        applyControlStyle();
+        const getResetButton = () => document.querySelector(".reset");
 
-        const toggleButton = createToggleButton();
-        toggleButton.addEventListener('click', () => {
+        let mode = false;
+        let components = [getCanvas(), getControls(), getLogo(), getSidebar(), getSidebarItems(), getResetButton()];
 
-            mode = !mode;
+        const controlsStyle = "z-index: 100; padding: 2px 6px; display: inline-flex; align-items: center;";
+        const canvasStyle = "z-index: -100; background-color: white;";
 
-            console.log(mode);
+        function init() {
 
-            assignDarkMode(mode);
-            setDarkMode(mode);
-        });
+            // Create button
+
+            createModeButton()
+                .addEventListener('click', () => toggleDarkMode());
+
+            // Style overrides
+
+            getControls().style = controlsStyle;
+            getCanvas().style = canvasStyle;
+
+            // Load
+
+            setMode(hasDarkMode());
+        }
+
+        init();
+
+        // --- Elements
+
+        function createModeButton() {
+            const button = createElement("wooshii-dark-toggle", "div", {class: "item"});
+            button.innerText = 'Toggle Dark Mode';
+            button.setAttribute(getGameID(), "");
+
+            const controls = getControls();
+            controls.insertBefore(button, controls.children[0]);
+
+            return button;
+        }
+
+        // --- Styles
+
+        function setTitleStyle() {
+            const filter = mode === true ? "invert(1)" : "invert(0)";
+            getTitle().style.filter = filter;
+        }
+
+        // --- Mode Handling
+
+        function toggleDarkMode() {
+            getCanvas().style.transition = "0.7s";
+            getControls().style.transition = '0.7s';
+            getLogo().style.transition = "0.7s";
+
+            setMode(!mode);
+        }
+
+        function setMode(dark) {
+            mode = dark;
+            saveDarkMode(mode);
+
+            setTitleStyle();
+            toggleElements();
+        }
+
+        function toggleElements() {
+            const invert = mode ? 1 : 0;
+            components.forEach((e) => {
+                e.style.webkitFilter = `invert(${invert})`
+                e.style.filter = `invert(${invert})`
+            });
+        }
     }
 
-    // Helpers
+    // --- Data
 
-    function applyControlStyle() {
-        controls.style.zIndex = 100;
-        controls.style.padding = "2px 6px";
-        controls.style.display = "inline-flex ";
-        controls.style.alignItems = "center";
-        controls.style.borderRadius = '5px';
+    function saveDarkMode(isOn) {
+        localStorage.setItem(`wooshii-ic-${SAVE_KEY}`, isOn);
     }
 
-    function createToggleButton() {
-
-        const button = createElement("wooshii-dark-toggle", "div", {class: "item"});
-        button.innerText = 'Toggle Dark Mode';
-        button.setAttribute(getGameID(), "");
-
-        controls.insertBefore(button, controls.children[0]);
-
-        return button;
+    function hasDarkMode() {
+        return localStorage.getItem(`wooshii-ic-${SAVE_KEY}`) === "true";
     }
+
+    function getGameID() {
+        return 'data-' + Object.keys(document.querySelector('.container').dataset)[0];
+    }
+
+    // --- HTML helpers
+
+    function createButton(name, data = {}) {
+        return createElement(name, 'button', data);
+    }
+
+    function createElement(name, type, data = {}) {
+        const element = document.createElement(type);
+        element.id = name;
+        element.classList.add(data.class);
+
+        return element;
+    }
+
+    //--- Init
 
     function darkModeInit() {
-        mode = hasDarkMode();
-
-        if (mode) {
+        if (hasDarkMode()) {
             document.documentElement.style.backgroundColor = "black";
         }
     }
 
-    function assignDarkMode(isOn) {
-
-        if (isOn === "true" || isOn === true)
-        {
-            canvas.style.backgroundColor = "white";
-            canvas.style.webkitFilter = "invert(1)";
-
-            controls.style.webkitFilter = "invert(1)";
-
-            sidebar.style.webkitFilter = "invert(1)";
-            sidebar.children[0].style.webkitFilter = "invert(1)";
-        }
-        else
-        {
-            canvas.style.webkitFilter = "";
-            controls.style.webkitFilter = "";
-            sidebar.style.webkitFilter = "";
-            sidebar.style.webkitFilter = "";
-            sidebar.children[0].style.webkitFilter = "";
-        }
-    }
-
-    function setDarkMode(isOn) {
-        localStorage.setItem(`infinite-craft-dark-mode`, isOn);
-    }
-
-    function getDarkMode() {
-        return localStorage.getItem(`infinite-craft-dark-mode`);
-    }
-
-    function hasDarkMode() {
-        return getDarkMode() === true || getDarkMode() === "true";
-    }
-
-    function getGameID() {
-        return 'data-' + Object.keys(getContainer().dataset)[0];
-    }
-
-    function getContainer() {
-        return document.querySelector('.container');
-    }
-
-    // Init
-
-
-    window.addEventListener('load', () => {
-        init();
-
-    }, false);
-
     darkModeInit();
+    window.addEventListener('load', () => { feature_darkmode() }, false);
 })();
-
-function createButton(name, data = {}) {
-    return createElement(name, 'button', data);
-}
-
-function createElement(name, type, data = {}) {
-    const element = document.createElement(type);
-    element.id = name;
-    element.classList.add(data.class);
-
-    return element;
-}
-
-function applyStyle(element, style) {
-
-    Object.keys(style).forEach((attr) => {
-        element.style[attr] = style[attr];
-    });
-}
